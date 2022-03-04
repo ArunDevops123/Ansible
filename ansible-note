@@ -1,0 +1,54 @@
+Ansible-note
+*************
+installation (ubuntu18.04)
+***************************
+
+sudo apt-add-repository ppa:ansible/ansible
+
+sudo apt update
+
+sudo apt install ansible
+
+Automation
+**********
+echo -ne '\n' | sudo apt-add-repository ppa:ansible/ansible
+sudo apt update -y
+sudo apt install ansible -y
+
+
+vim /etc/ansible/hosts --->  52.170.233.220 ansible_connection=ssh ansible_user=test ansible_ssh_pass=zippyops ansible_port=2235
+
+host_key_checking = False   ---> uncommand the line from ---> vim /etc/ansible/ansible.cfg  For passwd auth. (#host_key_checking = False)
+sed -i 's/#host_key_checking =.*/host_key_checking = False/g' /etc/ansible/ansible.cfg
+
+ansible all -m ping 
+
+
+root@demo-linux-1:/etc/ansible# cat apache.yml
+
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Install latest version of Apache
+      apt: name=apache2 update_cache=yes state=latest
+
+    - name: restart-apache
+      service:
+        name: apache2
+        state: restarted
+
+		
+		
+root@demo-linux-1:/etc/ansible# ansible-playbook -i hosts apache.yml	  ---> RUN
+
+**********************************************
+
+Docker machine inventroy  same--> ip diff--> port
+************************* 
+
+host1 ansible_ssh_host=13.92.190.108 ansible_connection=ssh ansible_user=test ansible_ssh_pass=zippyops ansible_port=2235
+host2 ansible_ssh_host=13.92.190.108 ansible_connection=ssh ansible_user=test ansible_ssh_pass=zippyops ansible_port=2236
+host3 ansible_ssh_host=13.92.190.108 ansible_connection=ssh ansible_user=test ansible_ssh_pass=zippyops ansible_port=2237
+host4 ansible_ssh_host=13.92.190.108 ansible_connection=ssh ansible_user=test ansible_ssh_pass=zippyops ansible_port=2238
+	
