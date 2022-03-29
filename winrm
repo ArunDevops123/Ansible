@@ -1,0 +1,24 @@
+######plaintext: the specified credentials were rejected by the server
+winrm quickconfig -q
+Set-NetConnectionProfile –NetworkCategory private
+Get-NetFirewallPortFilter | ?{$_.LocalPort -eq 5985 } | Get-NetFirewallRule | ?{ $_.Direction -eq "Inbound" -and $_.Profile -eq "Public" -and $_.Action -eq "Allow"} | Set-NetFirewallRule -RemoteAddress "Any"
+Get-NetFirewallPortFilter | ?{$_.LocalPort -eq 5986 } | Get-NetFirewallRule | ?{ $_.Direction -eq "Inbound" -and $_.Profile -eq "Public" -and $_.Action -eq "Allow"} | Set-NetFirewallRule -RemoteAddress "Any"
+winrm set winrm/config/client/auth '@{Basic="true"}'
+winrm set winrm/config/service/auth '@{Basic="true"}'
+winrm set winrm/config/client '@{AllowUnencrypted="true"}'
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+
+
+power shell version below 3.0  execute the below cmd
+*****************************************************
+#######WinRM Setup
+$url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+$file = "$env:temp\ConfigureRemotingForAnsible.ps1"
+(New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
+powershell.exe -ExecutionPolicy ByPass -File $file
+
+######WinRM Memory Hotfix
+$url = "https://raw.githubusercontent.com/jborean93/ansible-windows/master/scripts/Install-WMF3Hotfix.ps1"
+$file = "$env:temp\Install-WMF3Hotfix.ps1"
+(New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
+powershell.exe -ExecutionPolicy ByPass -File $file -Verbose
