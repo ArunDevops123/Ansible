@@ -51,4 +51,23 @@ host1 ansible_ssh_host=13.92.190.108 ansible_connection=ssh ansible_user=test an
 host2 ansible_ssh_host=13.92.190.108 ansible_connection=ssh ansible_user=test ansible_ssh_pass=zippyops ansible_port=2236
 host3 ansible_ssh_host=13.92.190.108 ansible_connection=ssh ansible_user=test ansible_ssh_pass=zippyops ansible_port=2237
 host4 ansible_ssh_host=13.92.190.108 ansible_connection=ssh ansible_user=test ansible_ssh_pass=zippyops ansible_port=2238
+
+#############################################################################################################################################################
+
+windows node connection
+***********************
+choco install -y --package-parameters=/SSHServerFeature openssh  ---> run to configure windows for ansible
+
+run the below command to refresh the windows, Then an only you can see the installed package
+*********************************************************************************************
+$env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+refreshenv
+
+hosts entry like below
+***********************
+
+host1 ansible_ssh_host=52.142.9.189 ansible_connection=ssh ansible_shell_type=cmd ansible_user=training ansible_ssh_pass=Test@123 ansible_port=22
+
+ansible all -i hosts -m win_ping    ---> to ping the windows
 	
